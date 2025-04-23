@@ -11,15 +11,53 @@ const Button = ({ className, children, ...props }) => (
 // Mock Icon Komponenten (Platzhalter)
 const MockIcon = ({ className }) => <svg className={`w-6 h-6 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>;
 const PlayIcon = ({ className }) => <MockIcon className={className} />;
-const ShoppingBag = ({ className }) => <MockIcon className={className} />;
-const Link2 = ({ className }) => <MockIcon className={className} />;
-const DollarSign = ({ className }) => <MockIcon className={className} />;
-// Mock Icon für das neue Dashboard (Chart/Trending Up)
+const ShoppingBag = ({ className }) => ( // ShoppingBag Icon (Platzhalter)
+    <svg className={`w-6 h-6 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+    </svg>
+);
+// Mock Icon für Performance Dashboard (Chart/Trending Up)
 const TrendingUpIcon = ({ className }) => (
     <svg className={`w-6 h-6 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
     </svg>
 );
+// Mock Icon für Creator Partnership (Users)
+const UsersIcon = ({ className }) => (
+    <svg className={`w-6 h-6 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M12 7a4 4 0 110-5.292A4 4 0 0112 7z" />
+    </svg>
+);
+
+
+// Hilfsfunktion für Intersection Observer Logik
+const useIntersectionObserver = (options) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const elementRef = useRef(null);
+
+    useEffect(() => {
+        const currentElement = elementRef.current; // Kopie für Cleanup
+        const observer = new IntersectionObserver((entries) => {
+            const [entry] = entries;
+            if (entry.isIntersecting) {
+                setIsVisible(true);
+                observer.unobserve(currentElement); // Beobachtung stoppen
+            }
+        }, options);
+
+        if (currentElement) {
+            observer.observe(currentElement);
+        }
+
+        return () => {
+            if (currentElement) {
+                observer.unobserve(currentElement);
+            }
+        };
+    }, [options]); // Abhängigkeit von Optionen
+
+    return [elementRef, isVisible];
+};
 
 
 // Hauptkomponente HomePage
@@ -27,46 +65,59 @@ export default function HomePage() {
     // URL für das Frame-Hintergrundbild
     const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
 
-    // Zustand für die Sichtbarkeit des Performance-Abschnitts
-    const [isPerformanceVisible, setIsPerformanceVisible] = useState(false);
-    // Ref für das Element, das beobachtet werden soll
-    const performanceSectionRef = useRef(null);
+    // Observer-Optionen für alle Abschnitte
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1 // Auslösen, wenn 10% sichtbar sind
+    };
 
-    // Effekt zum Einrichten des Intersection Observers
-    useEffect(() => {
-        const sectionElement = performanceSectionRef.current; // Das DOM-Element holen
+    // Intersection Observer für Performance-Abschnitt
+    const [performanceSectionRef, isPerformanceVisible] = useIntersectionObserver(observerOptions);
+    // Intersection Observer für TikTok-Abschnitt
+    const [tiktokSectionRef, isTikTokVisible] = useIntersectionObserver(observerOptions);
+    // Intersection Observer für Creator-Abschnitt
+    const [creatorSectionRef, isCreatorVisible] = useIntersectionObserver(observerOptions);
 
-        // Callback-Funktion für den Observer
-        const observerCallback = (entries) => {
-            const [entry] = entries; // Wir beobachten nur ein Element
-            if (entry.isIntersecting) {
-                setIsPerformanceVisible(true); // Zustand auf sichtbar setzen
-                observer.unobserve(sectionElement); // Beobachtung beenden, nachdem es sichtbar wurde
-            }
-        };
+    // State für das Kontaktformular
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        userType: '', // 'seller' or 'creator'
+        tiktokHandle: '',
+        website: '',
+        message: ''
+    });
 
-        // Observer-Optionen (z.B. wann der Callback ausgelöst wird)
-        const observerOptions = {
-            root: null, // Beobachtet im Verhältnis zum Viewport
-            rootMargin: '0px',
-            threshold: 0.1 // Auslösen, wenn 10% des Elements sichtbar sind
-        };
+    // Handler für Änderungen in den Formularfeldern
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
 
-        // Observer erstellen
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
+    // Handler für Änderungen bei den Radio-Buttons
+    const handleUserTypeChange = (e) => {
+        setFormData(prevState => ({
+            ...prevState,
+            userType: e.target.value,
+            // Felder zurücksetzen, wenn Typ geändert wird
+            tiktokHandle: e.target.value === 'seller' ? prevState.tiktokHandle : '',
+            website: e.target.value === 'creator' ? prevState.website : ''
+        }));
+    };
 
-        // Element beobachten, wenn es existiert
-        if (sectionElement) {
-            observer.observe(sectionElement);
-        }
-
-        // Cleanup-Funktion: Beobachtung beenden, wenn Komponente unmounted wird
-        return () => {
-            if (sectionElement) {
-                observer.unobserve(sectionElement);
-            }
-        };
-    }, []); // Leeres Abhängigkeitsarray, damit der Effekt nur einmal beim Mounten läuft
+    // Handler für das Absenden des Formulars (Platzhalter)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Formulardaten:", formData);
+        // Hier würde normalerweise die Logik zum Senden der Daten stehen
+        alert("Nachricht gesendet (Simulation)!"); // Platzhalter-Feedback
+        // Optional: Formular zurücksetzen
+        setFormData({ name: '', email: '', userType: '', tiktokHandle: '', website: '', message: '' });
+    };
 
 
     return (
@@ -137,12 +188,12 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* Neuer Abschnitt: Performance Fokus */}
+            {/* Abschnitt 1: Performance Fokus */}
             {/* Äußerer Container mit vertikalem Padding */}
             {/* Ref und Animationsklassen hinzugefügt */}
             <div
-                ref={performanceSectionRef} // Ref hier binden
-                className={`py-20 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-out ${ // Basisklassen + Transition
+                ref={performanceSectionRef} // Ref für diesen Abschnitt
+                className={`py-10 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-out ${ // Basisklassen + Transition, py-20 zu py-10 geändert
                     isPerformanceVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10' // Bedingte Klassen für Animation
                 }`}
             >
@@ -157,12 +208,11 @@ export default function HomePage() {
                     }}
                 >
                     {/* Linke Spalte: Text */}
-                    {/* mb-0 entfernt, da Abstand durch Grid-Gap und Padding geregelt wird */}
                     <div className="mb-10 md:mb-0">
-                        {/* Titel jetzt mit Icon */}
-                        <div className="flex items-center gap-3 mb-4"> {/* Wrapper für Icon und H2 */}
-                            <TrendingUpIcon className="text-cyan-400 w-8 h-8 flex-shrink-0" /> {/* Icon hier eingefügt */}
-                            <h2 className="text-4xl font-bold">Drive Real Results</h2> {/* mb-4 zum Wrapper verschoben */}
+                        {/* Titel mit Icon */}
+                        <div className="flex items-center gap-3 mb-4">
+                            <TrendingUpIcon className="text-cyan-400 w-8 h-8 flex-shrink-0" />
+                            <h2 className="text-4xl font-bold">Drive Real Results</h2>
                         </div>
                         <p className="text-neutral-300 text-lg mb-6">
                             We focus on performance marketing that delivers measurable revenue growth.
@@ -173,16 +223,13 @@ export default function HomePage() {
                     </div>
 
                     {/* Rechte Spalte: Dashboard-Inhalt */}
-                    {/* Styling (Padding, Rand, Hintergrund, Rundung) entfernt, da der äußere Container den Frame bildet */}
                     <div>
                         {/* Titel zentriert */}
-                        {/* Padding (px-8) entfernt */}
                         <div className="relative z-10 flex justify-center mb-1">
                             <h3 className="text-xl font-semibold">Measurable Revenue Boost</h3>
                         </div>
 
                         {/* Container für Bild */}
-                        {/* Padding (px-6) entfernt */}
                         <div className="relative">
                             {/* Performance Bild */}
                             <img
@@ -204,49 +251,261 @@ export default function HomePage() {
                 </div>
             </div>
 
-
-            {/* Features Section (Bestehender Abschnitt) */}
-            {/* Margin Top hinzugefügt für Abstand zum neuen Abschnitt */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto text-white px-4 sm:px-6 lg:px-8 mt-20">
-                {/* Feature 1: Content Creation */}
-                <div className="bg-neutral-900 p-6 rounded-xl flex items-start gap-4 hover:bg-neutral-800 transition-colors duration-300">
-                    <PlayIcon className="text-cyan-400 mt-1 flex-shrink-0" />
-                    <div>
-                        <h3 className="font-semibold text-xl mb-1">Content Creation</h3>
-                        <p className="text-neutral-400">We produce engaging TikTok videos to showcase products.</p>
+            {/* Abschnitt 2: TikTok Shop Fokus */}
+            {/* Äußerer Container mit vertikalem Padding */}
+            {/* Ref und Animationsklassen hinzugefügt */}
+            <div
+                ref={tiktokSectionRef} // Ref für diesen Abschnitt
+                className={`py-10 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-out ${ // Basisklassen + Transition, py-20 zu py-10 geändert
+                    isTikTokVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10' // Bedingte Klassen für Animation
+                }`}
+            >
+                {/* Grid-Container mit Frame-Hintergrund und Innen-Padding */}
+                <div
+                    className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16" // Padding hinzugefügt (p-16)
+                    style={{
+                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundSize: '100% 100%', // Streckt das Bild auf die Containergröße
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                    }}
+                >
+                    {/* Linke Spalte: Text */}
+                    <div className="mb-10 md:mb-0">
+                        {/* Titel mit Icon */}
+                        <div className="flex items-center gap-3 mb-4">
+                            <ShoppingBag className="text-cyan-400 w-8 h-8 flex-shrink-0" /> {/* Icon geändert */}
+                            <h2 className="text-4xl font-bold">TikTok Shop Experts</h2> {/* Titel geändert */}
+                        </div>
+                        <p className="text-neutral-300 text-lg mb-6">
+                            We specialize in TikTok Shop, leveraging seamless integration for direct conversions.
+                            Tap into this rapidly growing platform with our targeted strategies.
+                        </p> {/* Text geändert */}
+                        {/* Optional: Button hinzufügen */}
+                        {/* <Button className="bg-white text-black hover:bg-neutral-200 font-semibold">Explore TikTok Shop</Button> */}
                     </div>
-                </div>
 
-                {/* Feature 2: Product Selection */}
-                <div className="bg-neutral-900 p-6 rounded-xl flex items-start gap-4 hover:bg-neutral-800 transition-colors duration-300">
-                    <ShoppingBag className="text-cyan-400 mt-1 flex-shrink-0" />
+                    {/* Rechte Spalte: Dashboard-Inhalt */}
                     <div>
-                        <h3 className="font-semibold text-xl mb-1">Product Selection</h3>
-                        <p className="text-neutral-400">We choose relevant products from the TikTok Shop marketplace.</p>
-                    </div>
-                </div>
+                        {/* Titel zentriert */}
+                        <div className="relative z-10 flex justify-center mb-1">
+                            <h3 className="text-xl font-semibold">Seamless TikTok Integration</h3> {/* Titel geändert */}
+                        </div>
 
-                {/* Feature 3: Tracking */}
-                <div className="bg-neutral-900 p-6 rounded-xl flex items-start gap-4 hover:bg-neutral-800 transition-colors duration-300">
-                    <Link2 className="text-cyan-400 mt-1 flex-shrink-0" />
-                    <div>
-                        <h3 className="font-semibold text-xl mb-1">Tracking</h3>
-                        <p className="text-neutral-400">We use affiliate links to track clicks and sales.</p>
-                    </div>
-                </div>
-
-                {/* Feature 4: Performance-Based */}
-                <div className="bg-neutral-900 p-6 rounded-xl flex items-start gap-4 hover:bg-neutral-800 transition-colors duration-300">
-                    <DollarSign className="text-cyan-400 mt-1 flex-shrink-0" />
-                    <div>
-                        <h3 className="font-semibold text-xl mb-1">Performance-Based</h3>
-                        <p className="text-neutral-400">We earn commissions on the sales we generate.</p>
+                        {/* Container für Bild */}
+                        <div className="relative">
+                            {/* Performance Bild (Platzhalter für jetzt) */}
+                            <img
+                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/p_dashboard.png" // Gleiches Bild wie oben
+                                alt="TikTok Shop Integration Concept" // Alt-Text angepasst
+                                className="w-full rounded-lg" // Nimmt die Breite des Containers ein
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=TikTok+Shop+Graphic"; // Platzhalter
+                                    e.target.alt = "Placeholder for TikTok Shop Graphic";
+                                }}
+                            />
+                        </div>
+                        {/* Subtext */}
+                        <p className="text-center text-neutral-400 text-sm mt-2 whitespace-nowrap">
+                            Direct Sales on a Booming Platform {/* Subtext geändert */}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Call to Action Section */}
-            {/* Padding für Einrückung */}
+            {/* Abschnitt 3: Creator Partnership */}
+            {/* Äußerer Container mit vertikalem Padding */}
+            {/* Ref und Animationsklassen hinzugefügt */}
+            <div
+                ref={creatorSectionRef} // Ref für diesen Abschnitt
+                className={`py-10 px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-out ${ // Basisklassen + Transition
+                    isCreatorVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10' // Bedingte Klassen für Animation
+                }`}
+            >
+                {/* Grid-Container mit Frame-Hintergrund und Innen-Padding */}
+                <div
+                    className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16" // Padding hinzugefügt (p-16)
+                    style={{
+                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundSize: '100% 100%', // Streckt das Bild auf die Containergröße
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                    }}
+                >
+                    {/* Linke Spalte: Text */}
+                    <div className="mb-10 md:mb-0">
+                        {/* Titel mit Icon */}
+                        <div className="flex items-center gap-3 mb-4">
+                            <UsersIcon className="text-cyan-400 w-8 h-8 flex-shrink-0" /> {/* Icon geändert */}
+                            <h2 className="text-4xl font-bold">Empowering Creators</h2> {/* Titel geändert */}
+                        </div>
+                        <p className="text-neutral-300 text-lg mb-6">
+                            We build strong, transparent partnerships with creators. Benefit from fair commission structures and dedicated support to grow your influence and earnings.
+                        </p> {/* Text geändert */}
+                        {/* Optional: Button hinzufügen */}
+                        {/* <Button className="bg-white text-black hover:bg-neutral-200 font-semibold">Become a Partner</Button> */}
+                    </div>
+
+                    {/* Rechte Spalte: Dashboard-Inhalt */}
+                    <div>
+                        {/* Titel zentriert */}
+                        <div className="relative z-10 flex justify-center mb-1">
+                            <h3 className="text-xl font-semibold">Fair & Supportive Partnership</h3> {/* Titel geändert */}
+                        </div>
+
+                        {/* Container für Bild */}
+                        <div className="relative">
+                            {/* Performance Bild (Platzhalter für jetzt) */}
+                            <img
+                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/p_dashboard.png" // Gleiches Bild wie oben
+                                alt="Creator Partnership Concept" // Alt-Text angepasst
+                                className="w-full rounded-lg" // Nimmt die Breite des Containers ein
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Creator+Graphic"; // Platzhalter
+                                    e.target.alt = "Placeholder for Creator Graphic";
+                                }}
+                            />
+                        </div>
+                        {/* Subtext */}
+                        <p className="text-center text-neutral-400 text-sm mt-2 whitespace-nowrap">
+                            Grow Together with Transparent Collaboration {/* Subtext geändert */}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* === Features Section entfernt === */}
+
+
+            {/* Neuer Abschnitt: Kontaktformular */}
+            <div className="py-20 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-2xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Name */}
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium text-neutral-300 mb-1">Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                required
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                placeholder="Ihr Name"
+                            />
+                        </div>
+
+                        {/* Email */}
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-1">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                required
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                placeholder="Ihre Email-Adresse"
+                            />
+                        </div>
+
+                        {/* User Type (Radio Buttons) */}
+                        <fieldset>
+                            <legend className="block text-sm font-medium text-neutral-300 mb-2">Ich bin...</legend>
+                            <div className="flex items-center space-x-4">
+                                <div className="flex items-center">
+                                    <input
+                                        id="creator"
+                                        name="userType"
+                                        type="radio"
+                                        value="creator"
+                                        checked={formData.userType === 'creator'}
+                                        onChange={handleUserTypeChange}
+                                        className="h-4 w-4 text-cyan-600 border-neutral-600 focus:ring-cyan-500"
+                                    />
+                                    <label htmlFor="creator" className="ml-2 block text-sm text-neutral-300">Creator</label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        id="seller"
+                                        name="userType"
+                                        type="radio"
+                                        value="seller"
+                                        checked={formData.userType === 'seller'}
+                                        onChange={handleUserTypeChange}
+                                        className="h-4 w-4 text-cyan-600 border-neutral-600 focus:ring-cyan-500"
+                                    />
+                                    <label htmlFor="seller" className="ml-2 block text-sm text-neutral-300">Seller</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        {/* Conditional Field: TikTok Handle (for Creator) */}
+                        {formData.userType === 'creator' && (
+                            <div>
+                                <label htmlFor="tiktokHandle" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @</label>
+                                <input
+                                    type="text"
+                                    name="tiktokHandle"
+                                    id="tiktokHandle"
+                                    required
+                                    value={formData.tiktokHandle}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                    placeholder="Ihr TikTok @ Name"
+                                />
+                            </div>
+                        )}
+
+                        {/* Conditional Field: TikTok Handle or Website (for Seller) */}
+                        {formData.userType === 'seller' && (
+                            <div>
+                                <label htmlFor="website" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @ oder Website</label>
+                                <input
+                                    type="text"
+                                    name="website" // Kann TikTok oder URL enthalten
+                                    id="website"
+                                    required
+                                    value={formData.website}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                    placeholder="Ihr TikTok @ oder Ihre Website URL"
+                                />
+                            </div>
+                        )}
+
+                        {/* Message */}
+                        <div>
+                            <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">Nachricht</label>
+                            <textarea
+                                name="message"
+                                id="message"
+                                rows={4}
+                                value={formData.message}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                placeholder="Ihre Nachricht an uns..."
+                            />
+                        </div>
+
+                        {/* Submit Button */}
+                        <div>
+                            <Button type="submit" className="w-full bg-white text-black hover:bg-neutral-200 font-semibold">
+                                Nachricht Senden
+                            </Button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            {/* Call to Action Section (Beibehalten) */}
             <div className="text-center mt-20 mb-10 px-4 sm:px-6 lg:px-8">
                 <h2 className="text-3xl font-bold">Drive Sales on TikTok</h2>
                 <p className="mt-2 text-neutral-400">Partner with us to promote your products</p>
