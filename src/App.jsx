@@ -62,8 +62,11 @@ const useIntersectionObserver = (options) => {
 
 // Hauptkomponente HomePage
 export default function HomePage() {
-    // URL für das Frame-Hintergrundbild
+    // URL für das Frame-Hintergrundbild (Abschnitt 1 & 3)
     const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
+    // URL für das zweite Frame-Hintergrundbild (Abschnitt 2)
+    const frameBgUrl2 = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit_2.png";
+
 
     // Observer-Optionen für alle Abschnitte
     const observerOptions = {
@@ -201,7 +204,7 @@ export default function HomePage() {
                 <div
                     className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16" // Padding hinzugefügt (p-16)
                     style={{
-                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundImage: `url('${frameBgUrl}')`, // Erstes Frame-Bild
                         backgroundSize: '100% 100%', // Streckt das Bild auf die Containergröße
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
@@ -264,7 +267,7 @@ export default function HomePage() {
                 <div
                     className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16" // Padding hinzugefügt (p-16)
                     style={{
-                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundImage: `url('${frameBgUrl2}')`, // NEUES Frame-Bild für diesen Abschnitt
                         backgroundSize: '100% 100%', // Streckt das Bild auf die Containergröße
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
@@ -294,10 +297,10 @@ export default function HomePage() {
 
                         {/* Container für Bild */}
                         <div className="relative">
-                            {/* Performance Bild (Platzhalter für jetzt) */}
+                            {/* NEUES Bild für TikTok Shop */}
                             <img
-                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/p_dashboard.png" // Gleiches Bild wie oben
-                                alt="TikTok Shop Integration Concept" // Alt-Text angepasst
+                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Seemless.png" // NEUE Bild-URL
+                                alt="Seamless TikTok Shop Integration Graphic" // Alt-Text angepasst
                                 className="w-full rounded-lg" // Nimmt die Breite des Containers ein
                                 onError={(e) => {
                                     e.target.onerror = null;
@@ -327,7 +330,7 @@ export default function HomePage() {
                 <div
                     className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16" // Padding hinzugefügt (p-16)
                     style={{
-                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundImage: `url('${frameBgUrl}')`, // Erstes Frame-Bild wiederverwenden
                         backgroundSize: '100% 100%', // Streckt das Bild auf die Containergröße
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
@@ -356,10 +359,10 @@ export default function HomePage() {
 
                         {/* Container für Bild */}
                         <div className="relative">
-                            {/* Performance Bild (Platzhalter für jetzt) */}
+                            {/* NEUES Bild für Creator Partnership */}
                             <img
-                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/p_dashboard.png" // Gleiches Bild wie oben
-                                alt="Creator Partnership Concept" // Alt-Text angepasst
+                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/fair%26supportive.png" // NEUE Bild-URL
+                                alt="Fair and Supportive Creator Partnership Graphic" // Alt-Text angepasst
                                 className="w-full rounded-lg" // Nimmt die Breite des Containers ein
                                 onError={(e) => {
                                     e.target.onerror = null;
