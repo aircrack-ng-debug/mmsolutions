@@ -88,9 +88,10 @@ export default function HomePage() {
         email: '',
         userType: '', // 'seller' or 'creator'
         tiktokHandle: '',
-        website: '',
+        websiteOrTiktok: '', // Kombiniertes Feld für Seller
         message: ''
     });
+    const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting', 'success', 'error', null
 
     // Handler für Änderungen in den Formularfeldern
     const handleInputChange = (e) => {
@@ -103,23 +104,62 @@ export default function HomePage() {
 
     // Handler für Änderungen bei den Radio-Buttons
     const handleUserTypeChange = (e) => {
+        const newUserType = e.target.value;
         setFormData(prevState => ({
             ...prevState,
-            userType: e.target.value,
+            userType: newUserType,
             // Felder zurücksetzen, wenn Typ geändert wird
-            tiktokHandle: e.target.value === 'seller' ? prevState.tiktokHandle : '',
-            website: e.target.value === 'creator' ? prevState.website : ''
+            tiktokHandle: newUserType === 'seller' ? '' : prevState.tiktokHandle,
+            websiteOrTiktok: newUserType === 'creator' ? '' : prevState.websiteOrTiktok
         }));
     };
 
-    // Handler für das Absenden des Formulars (Platzhalter)
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Formulardaten:", formData);
-        // Hier würde normalerweise die Logik zum Senden der Daten stehen
-        alert("Nachricht gesendet (Simulation)!"); // Platzhalter-Feedback
-        // Optional: Formular zurücksetzen
-        setFormData({ name: '', email: '', userType: '', tiktokHandle: '', website: '', message: '' });
+    // Handler für das Absenden des Formulars mit Fetch
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Standard-Submit verhindern
+        setSubmissionStatus('submitting'); // Status auf "sendet" setzen
+
+        // Daten für Formspree vorbereiten (nur relevante Felder senden)
+        const dataToSend = { ...formData };
+        if (formData.userType === 'creator') {
+            delete dataToSend.websiteOrTiktok; // Entferne leeres Seller-Feld
+        } else if (formData.userType === 'seller') {
+            delete dataToSend.tiktokHandle; // Entferne leeres Creator-Feld
+        }
+
+        try {
+            const response = await fetch("https://formspree.io/f/mrbqbvvl", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json', // Wichtig für AJAX-Verarbeitung durch Formspree
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend) // Daten als JSON senden
+            });
+
+            if (response.ok) {
+                setSubmissionStatus('success'); // Status auf Erfolg setzen
+                // Formular zurücksetzen
+                setFormData({ name: '', email: '', userType: '', tiktokHandle: '', websiteOrTiktok: '', message: '' });
+                // Nach 2 Sekunden Status zurücksetzen, um Formular wieder anzuzeigen
+                setTimeout(() => {
+                    setSubmissionStatus(null);
+                }, 2000); // 2000 Millisekunden = 2 Sekunden
+            } else {
+                // Versuchen, die Fehlermeldung von Formspree zu bekommen
+                const errorData = await response.json();
+                throw new Error(errorData.errors ? errorData.errors.map(err => err.message).join(', ') : 'Fehler beim Senden.');
+            }
+        } catch (error) {
+            setSubmissionStatus('error');
+            console.error("Fehler beim Senden des Formulars:", error);
+            alert(`Fehler beim Senden: ${error.message}`); // Fehlermeldung anzeigen (könnte auch im UI sein)
+            // Status zurücksetzen, damit Nutzer es erneut versuchen kann
+            setTimeout(() => {
+                setSubmissionStatus(null);
+            }, 3000);
+        }
+        // Kein finally mehr nötig, da Status im success/error Fall gesetzt wird
     };
 
 
@@ -385,125 +425,157 @@ export default function HomePage() {
 
             {/* Neuer Abschnitt: Kontaktformular */}
             <div className="py-20 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-2xl mx-auto">
+                <div className="max-w-2xl mx-auto relative min-h-[500px]"> {/* Relative Position & Mindesthöhe für Platz */}
                     <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Name */}
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-neutral-300 mb-1">Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                id="name"
-                                required
-                                value={formData.name}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
-                                placeholder="Ihr Name"
-                            />
-                        </div>
 
-                        {/* Email */}
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-1">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                id="email"
-                                required
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
-                                placeholder="Ihre Email-Adresse"
-                            />
-                        </div>
+                    {/* Thank You Message Container */}
+                    {/* Bedingte Klassen für Sichtbarkeit und Positionierung */}
+                    <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out pointer-events-none ${ // pointer-events-none hinzugefügt
+                        submissionStatus === 'success' ? 'opacity-100 z-20' : 'opacity-0 hidden' // hidden hinzugefügt, wenn nicht success
+                    }`}>
+                        <h3 className="text-4xl font-bold animated-gradient-text text-center">
+                            Thank You!
+                        </h3>
+                    </div>
 
-                        {/* User Type (Radio Buttons) */}
-                        <fieldset>
-                            <legend className="block text-sm font-medium text-neutral-300 mb-2">Ich bin...</legend>
-                            <div className="flex items-center space-x-4">
-                                <div className="flex items-center">
-                                    <input
-                                        id="creator"
-                                        name="userType"
-                                        type="radio"
-                                        value="creator"
-                                        checked={formData.userType === 'creator'}
-                                        onChange={handleUserTypeChange}
-                                        className="h-4 w-4 text-cyan-600 border-neutral-600 focus:ring-cyan-500"
-                                    />
-                                    <label htmlFor="creator" className="ml-2 block text-sm text-neutral-300">Creator</label>
-                                </div>
-                                <div className="flex items-center">
-                                    <input
-                                        id="seller"
-                                        name="userType"
-                                        type="radio"
-                                        value="seller"
-                                        checked={formData.userType === 'seller'}
-                                        onChange={handleUserTypeChange}
-                                        className="h-4 w-4 text-cyan-600 border-neutral-600 focus:ring-cyan-500"
-                                    />
-                                    <label htmlFor="seller" className="ml-2 block text-sm text-neutral-300">Seller</label>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        {/* Conditional Field: TikTok Handle (for Creator) */}
-                        {formData.userType === 'creator' && (
+                    {/* Formular Container */}
+                    {/* Bedingte Klassen für Sichtbarkeit */}
+                    <div className={`transition-opacity duration-500 ease-in-out ${
+                        submissionStatus === 'success' ? 'opacity-0 invisible' : 'opacity-100 visible' // invisible/visible hinzugefügt
+                    }`}>
+                        <form
+                            onSubmit={handleSubmit} // onSubmit Handler hinzugefügt
+                            className="space-y-6"
+                        >
+                            {/* Name */}
                             <div>
-                                <label htmlFor="tiktokHandle" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @</label>
+                                <label htmlFor="name" className="block text-sm font-medium text-neutral-300 mb-1">Name</label>
                                 <input
                                     type="text"
-                                    name="tiktokHandle"
-                                    id="tiktokHandle"
+                                    name="name" // Name-Attribut ist wichtig
+                                    id="name"
                                     required
-                                    value={formData.tiktokHandle}
-                                    onChange={handleInputChange}
+                                    value={formData.name} // value hinzugefügt
+                                    onChange={handleInputChange} // onChange hinzugefügt
                                     className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
-                                    placeholder="Ihr TikTok @ Name"
+                                    placeholder="Ihr Name"
+                                    disabled={submissionStatus === 'submitting'} // Deaktivieren während Senden
                                 />
                             </div>
-                        )}
 
-                        {/* Conditional Field: TikTok Handle or Website (for Seller) */}
-                        {formData.userType === 'seller' && (
+                            {/* Email */}
                             <div>
-                                <label htmlFor="website" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @ oder Website</label>
+                                <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-1">Email</label>
                                 <input
-                                    type="text"
-                                    name="website" // Kann TikTok oder URL enthalten
-                                    id="website"
+                                    type="email"
+                                    name="email" // Name-Attribut ist wichtig
+                                    id="email"
                                     required
-                                    value={formData.website}
-                                    onChange={handleInputChange}
+                                    value={formData.email} // value hinzugefügt
+                                    onChange={handleInputChange} // onChange hinzugefügt
                                     className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
-                                    placeholder="Ihr TikTok @ oder Ihre Website URL"
+                                    placeholder="Ihre Email-Adresse"
+                                    disabled={submissionStatus === 'submitting'}
                                 />
                             </div>
-                        )}
 
-                        {/* Message */}
-                        <div>
-                            <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">Nachricht</label>
-                            <textarea
-                                name="message"
-                                id="message"
-                                rows={4}
-                                value={formData.message}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
-                                placeholder="Ihre Nachricht an uns..."
-                            />
-                        </div>
+                            {/* User Type (Radio Buttons) */}
+                            <fieldset disabled={submissionStatus === 'submitting'}>
+                                <legend className="block text-sm font-medium text-neutral-300 mb-2">Ich bin...</legend>
+                                <div className="flex items-center space-x-4">
+                                    <div className="flex items-center">
+                                        <input
+                                            id="creator"
+                                            name="userType" // Gleicher Name für Radio-Gruppe
+                                            type="radio"
+                                            value="creator"
+                                            checked={formData.userType === 'creator'} // State für bedingte Anzeige & Wert
+                                            onChange={handleUserTypeChange} // State aktualisieren
+                                            className="h-4 w-4 text-cyan-600 border-neutral-600 focus:ring-cyan-500"
+                                        />
+                                        <label htmlFor="creator" className="ml-2 block text-sm text-neutral-300">Creator</label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            id="seller"
+                                            name="userType" // Gleicher Name für Radio-Gruppe
+                                            type="radio"
+                                            value="seller"
+                                            checked={formData.userType === 'seller'} // State für bedingte Anzeige & Wert
+                                            onChange={handleUserTypeChange} // State aktualisieren
+                                            className="h-4 w-4 text-cyan-600 border-neutral-600 focus:ring-cyan-500"
+                                        />
+                                        <label htmlFor="seller" className="ml-2 block text-sm text-neutral-300">Seller</label>
+                                    </div>
+                                </div>
+                            </fieldset>
 
-                        {/* Submit Button */}
-                        <div>
-                            <Button type="submit" className="w-full bg-white text-black hover:bg-neutral-200 font-semibold">
-                                Nachricht Senden
-                            </Button>
-                        </div>
-                    </form>
+                            {/* Conditional Field: TikTok Handle (for Creator) */}
+                            {formData.userType === 'creator' && (
+                                <div>
+                                    <label htmlFor="tiktokHandle" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @</label>
+                                    <input
+                                        type="text"
+                                        name="tiktokHandle" // Name-Attribut
+                                        id="tiktokHandle"
+                                        required
+                                        value={formData.tiktokHandle} // value hinzugefügt
+                                        onChange={handleInputChange} // onChange hinzugefügt
+                                        className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                        placeholder="Ihr TikTok @ Name"
+                                        disabled={submissionStatus === 'submitting'}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Conditional Field: TikTok Handle or Website (for Seller) */}
+                            {formData.userType === 'seller' && (
+                                <div>
+                                    <label htmlFor="websiteOrTiktok" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @ oder Website</label>
+                                    <input
+                                        type="text"
+                                        name="websiteOrTiktok" // Angepasster Name
+                                        id="websiteOrTiktok"
+                                        required
+                                        value={formData.websiteOrTiktok} // value hinzugefügt
+                                        onChange={handleInputChange} // onChange hinzugefügt
+                                        className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                        placeholder="Ihr TikTok @ oder Ihre Website URL"
+                                        disabled={submissionStatus === 'submitting'}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Message */}
+                            <div>
+                                <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">Nachricht</label>
+                                <textarea
+                                    name="message" // Name-Attribut
+                                    id="message"
+                                    rows={4}
+                                    value={formData.message} // value hinzugefügt
+                                    onChange={handleInputChange} // onChange hinzugefügt
+                                    className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500"
+                                    placeholder="Ihre Nachricht an uns..."
+                                    disabled={submissionStatus === 'submitting'}
+                                />
+                            </div>
+
+                            {/* Submit Button */}
+                            <div>
+                                {/* Button löst jetzt den handleSubmit Handler aus */}
+                                <Button
+                                    type="submit"
+                                    className={`w-full bg-white text-black hover:bg-neutral-200 font-semibold ${submissionStatus === 'submitting' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={submissionStatus === 'submitting'} // Button während Senden deaktivieren
+                                >
+                                    {submissionStatus === 'submitting' ? 'Senden...' : 'Nachricht Senden'}
+                                </Button>
+                            </div>
+                            {/* Fehlermeldung im UI anzeigen */}
+                            {submissionStatus === 'error' && <p className="text-red-500 text-center mt-4">Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut.</p>}
+                        </form>
+                    </div>
                 </div>
             </div>
 
