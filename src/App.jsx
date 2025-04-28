@@ -66,6 +66,8 @@ export default function HomePage() {
     const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
     // URL für das zweite Frame-Hintergrundbild (Abschnitt 2)
     const frameBgUrl2 = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit_2.png";
+    // URL für das Logo
+    const logoUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Logo_mm_solutions.png";
 
 
     // Observer-Optionen für alle Abschnitte
@@ -159,7 +161,6 @@ export default function HomePage() {
                 setSubmissionStatus(null);
             }, 3000);
         }
-        // Kein finally mehr nötig, da Status im success/error Fall gesetzt wird
     };
 
 
@@ -185,14 +186,85 @@ export default function HomePage() {
             50% { background-position: 100% 50%; } /* Endposition des Farbverlaufs */
             100% { background-position: 0% 50%; } /* Zurück zum Start für nahtlose Schleife */
           }
+
+          /* --- CSS für Logo-Würfel-Animation --- */
+          .logo-cube-container {
+            perspective: 1000px; /* Perspektive für 3D-Effekt */
+            width: 50px; /* Breite anpassen */
+            height: 30px; /* Höhe anpassen */
+          }
+
+          .logo-cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 5s infinite ease-in-out; /* Animation anwenden */
+          }
+
+          .logo-cube-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Rückseite nicht anzeigen */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem; /* 2xl */
+            font-weight: bold;
+          }
+
+          .logo-cube-front {
+            /* Vorderseite (Logo) */
+            transform: translateZ(15px); /* Halbe Höhe nach vorne */
+          }
+
+          .logo-cube-back {
+            /* Rückseite (Text) */
+            transform: rotateY(180deg) translateZ(15px); /* Um 180 Grad drehen und nach "vorne" (jetzt hinten) */
+            color: white; /* Textfarbe */
+          }
+
+          .logo-cube-face img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+          }
+
+          /* Keyframes für die Würfelrotation */
+          @keyframes rotateCube {
+            0%, 40% { /* Startposition, 2s Pause */
+              transform: translateZ(-15px) rotateY(0deg);
+            }
+            50%, 90% { /* Drehen, 2s Pause */
+              transform: translateZ(-15px) rotateY(-180deg);
+            }
+            100% { /* Zurückdrehen */
+              transform: translateZ(-15px) rotateY(-360deg);
+            }
+          }
+          /* --- Ende CSS für Logo-Würfel-Animation --- */
         `}
             </style>
 
             {/* Header Section */}
             {/* Relative Positionierung, Padding unten für die Linie */}
             <div className="relative flex justify-between items-center pt-10 pb-10 px-4 sm:px-6 lg:px-8">
-                {/* Logo/Markenname */}
-                <h1 className="text-white text-2xl font-bold">M&M <span className="text-neutral-400">SOLUTIONS</span></h1>
+                {/* Logo/Markenname Container mit Animation */}
+                <div className="flex items-center gap-2"> {/* Flex Container für Würfel und "SOLUTIONS" */}
+                    <div className="logo-cube-container">
+                        <div className="logo-cube">
+                            <div className="logo-cube-face logo-cube-front">
+                                <img src={logoUrl} alt="M&M Logo" />
+                            </div>
+                            <div className="logo-cube-face logo-cube-back">
+                                M&M
+                            </div>
+                        </div>
+                    </div>
+                    <span className="text-2xl font-bold text-neutral-400">SOLUTIONS</span> {/* "SOLUTIONS" daneben */}
+                </div>
+
                 {/* Get Started Button */}
                 <Button className="bg-neutral-800 text-white hover:bg-neutral-700">Get Started</Button>
 
