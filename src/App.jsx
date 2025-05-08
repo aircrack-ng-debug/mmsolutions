@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route, Link } from 'react-router-dom'; // Importiere Routes, Route und Link
+import AboutPage from './AboutPage'; // Importiere die AboutPage Komponente aus ihrer Datei
 
 // Mock Button Komponente - Wird für den Header Button durch <a> ersetzt
 // Diese Komponente wird weiterhin für andere Buttons verwendet, außer für die, die zu Ankern linken
@@ -61,28 +62,7 @@ const useIntersectionObserver = (options) => {
 };
 
 
-// Platzhalter Komponente für die Über uns Seite
-// Diese wird später in eine separate Datei verschoben
-const AboutPage = () => {
-    return (
-        <div className="min-h-screen bg-black text-white font-sans flex items-center justify-center">
-            <div className="text-center p-8">
-                <h1 className="text-4xl font-bold mb-4">Über uns</h1>
-                <p className="text-neutral-300 text-lg">
-                    Hier kommt der Inhalt über M&M Solutions hin.
-                    Wir können über unsere Geschichte, Mission, Team etc. sprechen.
-                </p>
-                {/* Optional: Link zurück zur Startseite */}
-                <div className="mt-8">
-                    <Link to="/" className="text-cyan-400 hover:underline">Zur Startseite</Link>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
-// Hauptkomponente HomePage
+// Hauptkomponente HomePage (unverändert)
 const HomePage = () => {
     // URLs (unverändert)
     const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
@@ -708,7 +688,7 @@ export default function App() {
         <Routes>
             {/* Route für die Startseite */}
             <Route path="/" element={<HomePage />} />
-            {/* Route für die Über uns Seite */}
+            {/* Route für die Über uns Seite - verwendet die importierte Komponente */}
             <Route path="/about" element={<AboutPage />} />
             {/* Optional: Eine Fallback-Route für 404-Fehler */}
             {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
