@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Routes, Route, Link } from 'react-router-dom'; // Importiere Routes, Route und Link
 
-// Mock Button Komponente
+// Mock Button Komponente - Wird für den Header Button durch <a> ersetzt
+// Diese Komponente wird weiterhin für andere Buttons verwendet, außer für die, die zu Ankern linken
 const Button = ({ className, children, ...props }) => (
     <button className={`px-6 py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${className}`} {...props}>
         {children}
     </button>
 );
 
-// Mock Icon Komponenten
+// Mock Icon Komponenten (unverändert)
 const MockIcon = ({ className }) => <svg className={`w-6 h-6 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>;
 const PlayIcon = ({ className }) => <MockIcon className={className} />;
 const ShoppingBag = ({ className }) => (
@@ -59,14 +61,35 @@ const useIntersectionObserver = (options) => {
 };
 
 
+// Platzhalter Komponente für die Über uns Seite
+// Diese wird später in eine separate Datei verschoben
+const AboutPage = () => {
+    return (
+        <div className="min-h-screen bg-black text-white font-sans flex items-center justify-center">
+            <div className="text-center p-8">
+                <h1 className="text-4xl font-bold mb-4">Über uns</h1>
+                <p className="text-neutral-300 text-lg">
+                    Hier kommt der Inhalt über M&M Solutions hin.
+                    Wir können über unsere Geschichte, Mission, Team etc. sprechen.
+                </p>
+                {/* Optional: Link zurück zur Startseite */}
+                <div className="mt-8">
+                    <Link to="/" className="text-cyan-400 hover:underline">Zur Startseite</Link>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 // Hauptkomponente HomePage
-export default function HomePage() {
-    // URLs
+const HomePage = () => {
+    // URLs (unverändert)
     const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
     const frameBgUrl2 = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit_2.png";
     const logoUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Logo_mm_solutions.png";
 
-    // State für Hero Animation (wird einmal nach Mount gesetzt)
+    // State für Hero Animation (wird einmal nach Mount gesetzt) (unverändert)
     const [isHeroVisible, setIsHeroVisible] = useState(false);
 
     useEffect(() => {
@@ -79,23 +102,24 @@ export default function HomePage() {
     }, []); // Leeres Array = läuft nur einmal nach dem initialen Rendern
 
 
-    // Observer-Optionen für alle Abschnitte (Zurückgesetzt auf Original)
+    // Observer-Optionen für alle Abschnitte (Zurückgesetzt auf Original) (unverändert)
     const observerOptions = {
         root: null,
         rootMargin: '0px', // Standard-Margin
         threshold: 0.1 // Auslösen, wenn 10% sichtbar sind
     };
 
-    // Intersection Observer für alle scroll-animierten Abschnitte
+    // Intersection Observer für alle scroll-animierten Abschnitte (unverändert)
     const [performanceSectionRef, isPerformanceVisible] = useIntersectionObserver(observerOptions);
     const [tiktokSectionRef, isTikTokVisible] = useIntersectionObserver(observerOptions);
     const [creatorSectionRef, isCreatorVisible] = useIntersectionObserver(observerOptions);
+    // Ref für Kontaktformular-Sektion beibehalten für Observer
     const [contactSectionRef, isContactVisible] = useIntersectionObserver(observerOptions);
     const [ctaSectionRef, isCtaVisible] = useIntersectionObserver(observerOptions);
     const [footerRef, isFooterVisible] = useIntersectionObserver(observerOptions);
 
 
-    // State für das Kontaktformular
+    // State für das Kontaktformular (unverändert)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -106,7 +130,7 @@ export default function HomePage() {
     });
     const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting', 'success', 'error', null
 
-    // Handler für Änderungen in den Formularfeldern
+    // Handler für Änderungen in den Formularfeldern (unverändert)
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -115,7 +139,7 @@ export default function HomePage() {
         }));
     };
 
-    // Handler für Änderungen bei den Radio-Buttons
+    // Handler für Änderungen bei den Radio-Buttons (unverändert)
     const handleUserTypeChange = (e) => {
         const newUserType = e.target.value;
         setFormData(prevState => ({
@@ -126,7 +150,7 @@ export default function HomePage() {
         }));
     };
 
-    // Handler für das Absenden des Formulars mit Fetch
+    // Handler für das Absenden des Formulars mit Fetch (unverändert)
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmissionStatus('submitting');
@@ -172,7 +196,7 @@ export default function HomePage() {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden">
-            {/* Inline-Style-Tag für benutzerdefinierte CSS-Animationen */}
+            {/* Inline-Style-Tag für benutzerdefinierte CSS-Animationen (unverändert) */}
             <style>
                 {`
           /* Klasse für den animierten Farbverlauf-Texteffekt */
@@ -252,7 +276,7 @@ export default function HomePage() {
 
             {/* Header Section */}
             <div className="relative flex justify-between items-center pt-10 pb-10 px-4 sm:px-6 lg:px-8">
-                {/* Logo/Markenname Container mit Animation */}
+                {/* Logo/Markenname Container mit Animation (unverändert) */}
                 <div className={`flex items-center gap-2 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                     <div className="logo-cube-container">
                         <div className="logo-cube">
@@ -267,16 +291,21 @@ export default function HomePage() {
                     <span className="text-2xl font-bold text-neutral-400">SOLUTIONS</span>
                 </div>
 
-                {/* Get Started Button */}
-                <Button className={`bg-neutral-800 text-white hover:bg-neutral-700 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>Get Started</Button>
+                {/* Get Started Button - Jetzt ein Anchor-Tag, linkt zum Kontaktformular */}
+                <a
+                    href="#contact-form-section" // Link zum Kontaktformular
+                    className={`px-6 py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-neutral-800 text-white hover:bg-neutral-700 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                >
+                    Get Started
+                </a>
 
-                {/* Gradient-Trennlinie */}
+                {/* Gradient-Trennlinie (unverändert) */}
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-black/0 via-neutral-500/60 to-black/0"></div>
             </div>
 
             {/* Hero und Bild Sektion */}
             <div className="relative h-[80vh] mb-20">
-                {/* Waves Bild Section */}
+                {/* Waves Bild Section (unverändert) */}
                 <img
                     src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Waves.png"
                     alt="Waves Banner"
@@ -290,18 +319,21 @@ export default function HomePage() {
 
                 {/* Hero Text Section */}
                 <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 flex flex-col justify-start items-center h-full pt-32">
-                    {/* Hauptüberschrift - mit Initialanimation */}
+                    {/* Hauptüberschrift - mit Initialanimation (unverändert) */}
                     <h1 className={`text-7xl font-bold transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>M&M Solutions</h1>
-                    {/* Unterüberschrift - mit Initialanimation und Verzögerung */}
+                    {/* Unterüberschrift - mit Initialanimation und Verzögerung (unverändert) */}
                     <h2 className={`text-3xl mt-4 animated-gradient-text transition-all duration-700 ease-out delay-200 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your Partner for professional E-Commerce Marketing</h2>
                     {/* Learn More Button Container - mit Initialanimation und Verzögerung */}
                     <div className={`mt-8 transition-all duration-700 ease-out delay-400 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        <Button className="bg-neutral-800 hover:bg-neutral-700">Learn More</Button>
+                        {/* Learn More Button - Jetzt ein Link zu /about */}
+                        <Link to="/about" className="px-6 py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-neutral-800 hover:bg-neutral-700">
+                            Learn More
+                        </Link>
                     </div>
                 </div>
             </div>
 
-            {/* Abschnitt 1: Performance Fokus */}
+            {/* Abschnitt 1: Performance Fokus (unverändert) */}
             {/* Scroll-triggered animation changed to fade-only */}
             <div
                 ref={performanceSectionRef}
@@ -357,7 +389,7 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* Abschnitt 2: TikTok Shop Fokus */}
+            {/* Abschnitt 2: TikTok Shop Fokus (unverändert) */}
             {/* Scroll-triggered animation changed to fade-only */}
             <div
                 ref={tiktokSectionRef}
@@ -413,7 +445,7 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* Abschnitt 3: Creator Partnership */}
+            {/* Abschnitt 3: Creator Partnership (unverändert) */}
             {/* Scroll-triggered animation changed to fade-only */}
             <div
                 ref={creatorSectionRef}
@@ -470,7 +502,9 @@ export default function HomePage() {
 
             {/* Neuer Abschnitt: Kontaktformular */}
             {/* Scroll-triggered animation changed to fade-only */}
+            {/* ID zum Linken hinzugefügt */}
             <div
+                id="contact-form-section" // ID für den Ankerlink
                 ref={contactSectionRef}
                 className={`py-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
                     isContactVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
@@ -479,7 +513,7 @@ export default function HomePage() {
                 <div className="max-w-2xl mx-auto relative min-h-[500px]">
                     <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
 
-                    {/* Thank You Message Container */}
+                    {/* Thank You Message Container (unverändert) */}
                     <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out pointer-events-none ${
                         submissionStatus === 'success' ? 'opacity-100 z-20' : 'opacity-0 hidden'
                     }`}>
@@ -490,7 +524,7 @@ export default function HomePage() {
                         )}
                     </div>
 
-                    {/* Formular Container */}
+                    {/* Formular Container (unverändert) */}
                     <div className={`transition-opacity duration-500 ease-in-out ${
                         submissionStatus === 'success' ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}>
@@ -614,7 +648,7 @@ export default function HomePage() {
                                     />
                                 </div>
 
-                                {/* Submit Button */}
+                                {/* Submit Button (unverändert) */}
                                 <div>
                                     <Button
                                         type="submit"
@@ -624,7 +658,7 @@ export default function HomePage() {
                                         {submissionStatus === 'submitting' ? 'Senden...' : 'Nachricht Senden'}
                                     </Button>
                                 </div>
-                                {/* Fehlermeldung im UI anzeigen */}
+                                {/* Fehlermeldung im UI anzeigen (unverändert) */}
                                 {submissionStatus === 'error' && <p className="text-red-500 text-center mt-4">Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut.</p>}
                             </form>
                         )}
@@ -643,10 +677,16 @@ export default function HomePage() {
             >
                 <h2 className="text-3xl font-bold">Drive Sales on TikTok</h2>
                 <p className="mt-2 text-neutral-400">Partner with us to promote your products</p>
-                <Button className="mt-6 bg-white text-black hover:bg-neutral-200 font-semibold">Get Started</Button>
+                {/* Get Started Button im CTA - Jetzt ein Anchor-Tag, linkt zum Kontaktformular */}
+                <a
+                    href="#contact-form-section" // Link zum Kontaktformular
+                    className="mt-6 bg-white text-black hover:bg-neutral-200 font-semibold px-6 py-3 rounded-lg inline-block transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                >
+                    Get Started
+                </a>
             </div>
 
-            {/* Footer Section */}
+            {/* Footer Section (unverändert) */}
             {/* Scroll-triggered animation changed to fade-only */}
             <footer
                 ref={footerRef}
@@ -659,5 +699,19 @@ export default function HomePage() {
             </footer>
 
         </div>
+    );
+};
+
+// Hauptkomponente, die die Routen verwaltet
+export default function App() {
+    return (
+        <Routes>
+            {/* Route für die Startseite */}
+            <Route path="/" element={<HomePage />} />
+            {/* Route für die Über uns Seite */}
+            <Route path="/about" element={<AboutPage />} />
+            {/* Optional: Eine Fallback-Route für 404-Fehler */}
+            {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
+        </Routes>
     );
 }
