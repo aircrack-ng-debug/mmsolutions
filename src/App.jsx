@@ -68,6 +68,8 @@ const HomePage = () => {
     const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
     const frameBgUrl2 = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit_2.png";
     const logoUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Logo_mm_solutions.png";
+    // Video URL für die Hero Sektion
+    const heroVideoUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Hero_Section_Video.mp4";
 
     // State für Hero Animation (wird einmal nach Mount gesetzt) (unverändert)
     const [isHeroVisible, setIsHeroVisible] = useState(false);
@@ -285,17 +287,17 @@ const HomePage = () => {
 
             {/* Hero und Bild Sektion */}
             <div className="relative h-[80vh] mb-20">
-                {/* Waves Bild Section (unverändert) */}
-                <img
-                    src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Waves.png"
-                    alt="Waves Banner"
+                {/* Waves Video Section */}
+                <video
+                    src={heroVideoUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline // Wichtig für Autoplay auf mobilen Geräten
                     className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src="https://placehold.co/1920x1080/000000/333333?text=Image+Load+Error";
-                        e.target.alt="Placeholder Banner";
-                    }}
-                />
+                >
+                    Your browser does not support the video tag.
+                </video>
 
                 {/* Hero Text Section */}
                 <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 flex flex-col justify-start items-center h-full pt-32">
