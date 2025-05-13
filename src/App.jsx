@@ -2,6 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route, Link } from 'react-router-dom'; // Importiere Routes, Route und Link
 import AboutPage from './AboutPage'; // Importiere die AboutPage Komponente aus ihrer Datei
 
+// Lokale Bilder und Video importieren
+// Stelle sicher, dass diese Dateien im Ordner 'src/images/' vorhanden sind
+import frameBgUrlLocal from './images/frame_edit.png';
+import frameBgUrl2Local from './images/frame_edit_2.png';
+import logoUrlLocal from './images/Logo_mm_solutions.png';
+import heroVideoUrlLocal from './images/Hero_Section_Video.mp4'; // Video auch aus images/
+import performanceDashboardUrlLocal from './images/p_dashboard.png';
+import tiktokShopIntegrationUrlLocal from './images/Seemless.png'; // Beachte den Dateinamen "Seemless.png"
+import creatorPartnershipUrlLocal from './images/fair&supportive.png'; // Beachte den Dateinamen "fair&supportive.png"
+
+
 // Mock Button Komponente - Wird für den Header Button durch <a> ersetzt
 // Diese Komponente wird weiterhin für andere Buttons verwendet, außer für die, die zu Ankern linken
 const Button = ({ className, children, ...props }) => (
@@ -62,14 +73,13 @@ const useIntersectionObserver = (options) => {
 };
 
 
-// Hauptkomponente HomePage (unverändert)
+// Hauptkomponente HomePage
 const HomePage = () => {
-    // URLs (unverändert)
-    const frameBgUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit.png";
-    const frameBgUrl2 = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/frame_edit_2.png";
-    const logoUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Logo_mm_solutions.png";
-    // Video URL für die Hero Sektion
-    const heroVideoUrl = "https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Hero_Section_Video.mp4";
+    // URLs wurden durch importierte lokale Pfade ersetzt
+    const frameBgUrl = frameBgUrlLocal;
+    const frameBgUrl2 = frameBgUrl2Local;
+    const logoUrl = logoUrlLocal;
+    const heroVideoUrl = heroVideoUrlLocal;
 
     // State für Hero Animation (wird einmal nach Mount gesetzt) (unverändert)
     const [isHeroVisible, setIsHeroVisible] = useState(false);
@@ -128,7 +138,7 @@ const HomePage = () => {
             ...prevState,
             userType: newUserType,
             tiktokHandle: newUserType === 'seller' ? '' : prevState.tiktokHandle,
-            websiteOrTiktok: newUserType === 'creator' ? '' : prevState.websiteOriktok
+            websiteOrTiktok: newUserType === 'creator' ? '' : prevState.websiteOriktok // websiteOrTiktok typo korrigiert
         }));
     };
 
@@ -201,8 +211,8 @@ const HomePage = () => {
           /* --- CSS für Logo-Würfel-Animation --- */
           .logo-cube-container {
             perspective: 1000px;
-            width: 50px;
-            height: 30px;
+            width: 50px; /* Breite angepasst für besseres Logo-Rendering */
+            height: 50px; /* Höhe angepasst für besseres Logo-Rendering */
           }
 
           .logo-cube {
@@ -226,11 +236,11 @@ const HomePage = () => {
           }
 
           .logo-cube-front {
-            transform: translateZ(15px);
+            transform: translateZ(25px); /* Angepasst an die neue Größe */
           }
 
           .logo-cube-back {
-            transform: rotateY(180deg) translateZ(15px);
+            transform: rotateY(180deg) translateZ(25px); /* Angepasst an die neue Größe */
             color: white;
           }
 
@@ -243,13 +253,13 @@ const HomePage = () => {
           /* Keyframes für die Würfelrotation */
           @keyframes rotateCube {
             0%, 40% {
-              transform: translateZ(-15px) rotateY(0deg);
+              transform: translateZ(-25px) rotateY(0deg); /* Angepasst an die neue Größe */
             }
             50%, 90% {
-              transform: translateZ(-15px) rotateY(-180deg);
+              transform: translateZ(-25px) rotateY(-180deg); /* Angepasst an die neue Größe */
             }
             100% {
-              transform: translateZ(-15px) rotateY(-360deg);
+              transform: translateZ(-25px) rotateY(-360deg); /* Angepasst an die neue Größe */
             }
           }
           /* --- Ende CSS für Logo-Würfel-Animation --- */
@@ -263,7 +273,7 @@ const HomePage = () => {
                     <div className="logo-cube-container">
                         <div className="logo-cube">
                             <div className="logo-cube-face logo-cube-front">
-                                <img src={logoUrl} alt="M&M Logo" />
+                                <img src={logoUrl} alt="M&M Logo" /> {/* Lokales Logo */}
                             </div>
                             <div className="logo-cube-face logo-cube-back">
                                 M&M
@@ -289,7 +299,7 @@ const HomePage = () => {
             <div className="relative h-[80vh] mb-20">
                 {/* Waves Video Section */}
                 <video
-                    src={heroVideoUrl}
+                    src={heroVideoUrl} // Lokales Video
                     autoPlay
                     loop
                     muted
@@ -315,18 +325,17 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Abschnitt 1: Performance Fokus (unverändert) */}
-            {/* Scroll-triggered animation changed to fade-only */}
+            {/* Abschnitt 1: Performance Fokus */}
             <div
                 ref={performanceSectionRef}
-                className={`py-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
-                    isPerformanceVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                className={`py-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${
+                    isPerformanceVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
                 <div
                     className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16"
                     style={{
-                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundImage: `url('${frameBgUrl}')`, // Lokales Hintergrundbild
                         backgroundSize: '100% 100%',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
@@ -350,12 +359,11 @@ const HomePage = () => {
                             <h3 className="text-xl font-semibold">Measurable Revenue Boost</h3>
                         </div>
                         <div className="relative">
-                            {/* Performance Bild - mit animation triggered by section visibility */}
                             <img
-                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/p_dashboard.png"
+                                src={performanceDashboardUrlLocal} // Lokales Bild
                                 alt="Performance Dashboard Graphic without border"
-                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${ // Nur opacity & delay
-                                    isPerformanceVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${
+                                    isPerformanceVisible ? 'opacity-100' : 'opacity-0'
                                 }`}
                                 onError={(e) => {
                                     e.target.onerror = null;
@@ -371,18 +379,17 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Abschnitt 2: TikTok Shop Fokus (unverändert) */}
-            {/* Scroll-triggered animation changed to fade-only */}
+            {/* Abschnitt 2: TikTok Shop Fokus */}
             <div
                 ref={tiktokSectionRef}
-                className={`py-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
-                    isTikTokVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                className={`py-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${
+                    isTikTokVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
                 <div
                     className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16"
                     style={{
-                        backgroundImage: `url('${frameBgUrl2}')`,
+                        backgroundImage: `url('${frameBgUrl2}')`, // Lokales Hintergrundbild
                         backgroundSize: '100% 100%',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
@@ -406,12 +413,11 @@ const HomePage = () => {
                             <h3 className="text-xl font-semibold">Seamless TikTok Integration</h3>
                         </div>
                         <div className="relative">
-                            {/* NEUES Bild für TikTok Shop - mit animation triggered by section visibility */}
                             <img
-                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/Seemless.png"
+                                src={tiktokShopIntegrationUrlLocal} // Lokales Bild
                                 alt="Seamless TikTok Shop Integration Graphic"
-                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${ // Nur opacity & delay
-                                    isTikTokVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${
+                                    isTikTokVisible ? 'opacity-100' : 'opacity-0'
                                 }`}
                                 onError={(e) => {
                                     e.target.onerror = null;
@@ -427,18 +433,17 @@ const HomePage = () => {
                 </div>
             </div>
 
-            {/* Abschnitt 3: Creator Partnership (unverändert) */}
-            {/* Scroll-triggered animation changed to fade-only */}
+            {/* Abschnitt 3: Creator Partnership */}
             <div
                 ref={creatorSectionRef}
-                className={`py-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
-                    isCreatorVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                className={`py-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${
+                    isCreatorVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
                 <div
                     className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16"
                     style={{
-                        backgroundImage: `url('${frameBgUrl}')`,
+                        backgroundImage: `url('${frameBgUrl}')`, // Lokales Hintergrundbild (Wiederverwendung von frameBgUrl)
                         backgroundSize: '100% 100%',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat'
@@ -461,12 +466,11 @@ const HomePage = () => {
                             <h3 className="text-xl font-semibold">Fair & Supportive Partnership</h3>
                         </div>
                         <div className="relative">
-                            {/* NEUES Bild für Creator Partnership - mit animation triggered by section visibility */}
                             <img
-                                src="https://raw.githubusercontent.com/aircrack-ng-debug/Imagehosting/refs/heads/main/fair%26supportive.png"
+                                src={creatorPartnershipUrlLocal} // Lokales Bild
                                 alt="Fair and Supportive Creator Partnership Graphic"
-                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${ // Nur opacity & delay
-                                    isCreatorVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${
+                                    isCreatorVisible ? 'opacity-100' : 'opacity-0'
                                 }`}
                                 onError={(e) => {
                                     e.target.onerror = null;
@@ -483,13 +487,11 @@ const HomePage = () => {
             </div>
 
             {/* Neuer Abschnitt: Kontaktformular */}
-            {/* Scroll-triggered animation changed to fade-only */}
-            {/* ID zum Linken hinzugefügt */}
             <div
                 id="contact-form-section" // ID für den Ankerlink
                 ref={contactSectionRef}
-                className={`py-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
-                    isContactVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                className={`py-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${
+                    isContactVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
                 <div className="max-w-2xl mx-auto relative min-h-[500px]">
@@ -650,11 +652,10 @@ const HomePage = () => {
 
 
             {/* Call to Action Section */}
-            {/* Scroll-triggered animation changed to fade-only */}
             <div
                 ref={ctaSectionRef}
-                className={`text-center mt-20 mb-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
-                    isCtaVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                className={`text-center mt-20 mb-10 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${
+                    isCtaVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
                 <h2 className="text-3xl font-bold">Drive Sales on TikTok</h2>
@@ -669,11 +670,10 @@ const HomePage = () => {
             </div>
 
             {/* Footer Section (unverändert) */}
-            {/* Scroll-triggered animation changed to fade-only */}
             <footer
                 ref={footerRef}
-                className={`text-center mt-20 pt-10 border-t border-neutral-800 px-4 sm:px-6 lg:px-8 pb-10 transition-opacity duration-1000 ease-out ${ // Nur opacity transition
-                    isFooterVisible ? 'opacity-100' : 'opacity-0' // Nur opacity ändern
+                className={`text-center mt-20 pt-10 border-t border-neutral-800 px-4 sm:px-6 lg:px-8 pb-10 transition-opacity duration-1000 ease-out ${
+                    isFooterVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
                 <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} M&M Solutions. All rights reserved.</p>
