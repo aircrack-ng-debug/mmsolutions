@@ -13,13 +13,16 @@ import tiktokShopIntegrationUrlLocal from './images/Seemless.png'; // Beachte de
 import creatorPartnershipUrlLocal from './images/fair&supportive.png'; // Beachte den Dateinamen "fair&supportive.png"
 
 
-// Mock Button Komponente - Wird für den Header Button durch <a> ersetzt
-// Diese Komponente wird weiterhin für andere Buttons verwendet, außer für die, die zu Ankern linken
+// Button Komponente - Überarbeitet mit neuem Stil und responsiven Padding/Textgrößen
 const Button = ({ className, children, ...props }) => (
-    <button className={`px-6 py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${className}`} {...props}>
+    <button
+        className={`px-6 py-2.5 text-sm sm:px-8 sm:py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-transparent border border-neutral-500 text-white hover:bg-neutral-800 hover:border-neutral-400 ${className}`}
+        {...props}
+    >
         {children}
     </button>
 );
+
 
 // Mock Icon Komponenten (unverändert)
 const MockIcon = ({ className }) => <svg className={`w-6 h-6 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>;
@@ -138,7 +141,7 @@ const HomePage = () => {
             ...prevState,
             userType: newUserType,
             tiktokHandle: newUserType === 'seller' ? '' : prevState.tiktokHandle,
-            websiteOrTiktok: newUserType === 'creator' ? '' : prevState.websiteOriktok // websiteOrTiktok typo korrigiert
+            websiteOrTiktok: newUserType === 'creator' ? '' : prevState.websiteOrTiktok
         }));
     };
 
@@ -169,7 +172,7 @@ const HomePage = () => {
                 setFormData({ name: '', email: '', userType: '', tiktokHandle: '', websiteOrTiktok: '', message: '' });
                 setTimeout(() => {
                     setSubmissionStatus(null);
-                }, 3000); // Längere Anzeige der Erfolgsmeldung
+                }, 3000);
             } else {
                 const errorData = await response.json();
                 const errorMessage = errorData.errors ? errorData.errors.map(err => err.message).join(', ') : 'Unbekannter Fehler.';
@@ -178,115 +181,132 @@ const HomePage = () => {
         } catch (error) {
             setSubmissionStatus('error');
             console.error("Fehler beim Senden des Formulars:", error);
-            // alert(`Fehler beim Senden: ${error.message}`); // Alert entfernen, falls nicht gewünscht
             setTimeout(() => {
                 setSubmissionStatus(null);
-            }, 5000); // Fehlermeldung länger anzeigen
+            }, 5000);
         }
     };
 
 
     return (
         <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden">
-            {/* Inline-Style-Tag für benutzerdefinierte CSS-Animationen (unverändert) */}
+            {/* Inline-Style-Tag für benutzerdefinierte CSS-Animationen */}
             <style>
                 {`
-          /* Klasse für den animierten Farbverlauf-Texteffekt */
-          .animated-gradient-text {
-            background: linear-gradient(270deg, #00ffff, #ff00ff, #00ffff);
-            background-size: 600% 600%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 6s ease infinite;
-          }
-
-          /* Keyframes für die Shimmer-Animation */
-          @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-
-          /* --- CSS für Logo-Würfel-Animation --- */
-          .logo-cube-container {
-            perspective: 1000px;
-            width: 50px; /* Breite angepasst für besseres Logo-Rendering */
-            height: 50px; /* Höhe angepasst für besseres Logo-Rendering */
-          }
-
-          .logo-cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotateCube 5s infinite ease-in-out;
-          }
-
-          .logo-cube-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem; /* 2xl */
-            font-weight: bold;
-          }
-
-          .logo-cube-front {
-            transform: translateZ(25px); /* Angepasst an die neue Größe */
-          }
-
-          .logo-cube-back {
-            transform: rotateY(180deg) translateZ(25px); /* Angepasst an die neue Größe */
-            color: white;
-          }
-
-          .logo-cube-face img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-          }
-
-          /* Keyframes für die Würfelrotation */
-          @keyframes rotateCube {
-            0%, 40% {
-              transform: translateZ(-25px) rotateY(0deg); /* Angepasst an die neue Größe */
-            }
-            50%, 90% {
-              transform: translateZ(-25px) rotateY(-180deg); /* Angepasst an die neue Größe */
-            }
-            100% {
-              transform: translateZ(-25px) rotateY(-360deg); /* Angepasst an die neue Größe */
-            }
-          }
-          /* --- Ende CSS für Logo-Würfel-Animation --- */
-        `}
+                  /* Klasse für den animierten Farbverlauf-Texteffekt */
+                  .animated-gradient-text {
+                    background: linear-gradient(270deg, #00ffff, #ff00ff, #00ffff);
+                    background-size: 600% 600%;
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: shimmer 6s ease infinite;
+                  }
+        
+                  /* Keyframes für die Shimmer-Animation */
+                  @keyframes shimmer {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                  }
+        
+                  /* --- CSS für Logo-Würfel-Animation (Responsive) --- */
+                  .logo-cube-container {
+                    perspective: 1000px;
+                    width: 36px; /* Mobile first: kleiner */
+                    height: 36px; /* Mobile first: kleiner */
+                  }
+        
+                  .logo-cube {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    transform-style: preserve-3d;
+                    animation: rotateCubeMobile 5s infinite ease-in-out; /* Mobile Animation zuerst */
+                  }
+        
+                  .logo-cube-face {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.25rem; /* Angepasst für kleinere Größe, falls Text im Würfel wäre */
+                    font-weight: bold;
+                  }
+        
+                  .logo-cube-front {
+                    transform: translateZ(18px); /* Angepasst an 36px Würfel */
+                  }
+        
+                  .logo-cube-back {
+                    transform: rotateY(180deg) translateZ(18px); /* Angepasst an 36px Würfel */
+                    color: white; 
+                  }
+        
+                  .logo-cube-face img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: contain;
+                  }
+        
+                  /* Keyframes für die Würfelrotation (Mobile) */
+                  @keyframes rotateCubeMobile {
+                    0%, 40% { transform: translateZ(-18px) rotateY(0deg); }
+                    50%, 90% { transform: translateZ(-18px) rotateY(-180deg); }
+                    100% { transform: translateZ(-18px) rotateY(-360deg); }
+                  }
+        
+                  /* Desktop Anpassungen für Logo Würfel */
+                  @media (min-width: 640px) { /* Tailwind 'sm' breakpoint */
+                    .logo-cube-container {
+                      width: 50px;
+                      height: 50px;
+                    }
+                    .logo-cube {
+                      animation-name: rotateCubeDesktop; /* Wechsle zur Desktop-Animation */
+                    }
+                    .logo-cube-front {
+                      transform: translateZ(25px);
+                    }
+                    .logo-cube-back {
+                      transform: rotateY(180deg) translateZ(25px);
+                    }
+                    /* Keyframes für die Würfelrotation (Desktop) */
+                    @keyframes rotateCubeDesktop {
+                      0%, 40% { transform: translateZ(-25px) rotateY(0deg); }
+                      50%, 90% { transform: translateZ(-25px) rotateY(-180deg); }
+                      100% { transform: translateZ(-25px) rotateY(-360deg); }
+                    }
+                  }
+                  /* --- Ende CSS für Logo-Würfel-Animation --- */
+                `}
             </style>
 
-            {/* Header Section */}
-            <div className="relative flex justify-between items-center pt-10 pb-10 px-4 sm:px-6 lg:px-8">
-                {/* Logo/Markenname Container mit Animation (unverändert) */}
-                <div className={`flex items-center gap-2 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* Header Section - Padding angepasst für Mobile */}
+            <div className="relative flex justify-between items-center pt-6 pb-6 px-4 sm:pt-8 sm:pb-8 sm:px-6 lg:px-8">
+                {/* Logo/Markenname Container mit Animation - Gap und Schriftgröße angepasst */}
+                <div className={`flex items-center gap-1 sm:gap-2 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                     <div className="logo-cube-container">
                         <div className="logo-cube">
                             <div className="logo-cube-face logo-cube-front">
-                                <img src={logoUrl} alt="M&M Logo" /> {/* Lokales Logo */}
+                                <img src={logoUrl} alt="M&M Logo" />
                             </div>
                             <div className="logo-cube-face logo-cube-back">
-                                M&M
+                                MM {/* Geändert von M&M zu MM */}
                             </div>
                         </div>
                     </div>
-                    <span className="text-2xl font-bold text-neutral-400">SOLUTIONS</span>
+                    {/* Schriftgröße von SOLUTIONS angepasst */}
+                    <span className="text-lg sm:text-xl lg:text-2xl font-bold text-neutral-400">SOLUTIONS</span>
                 </div>
 
-                {/* Get Started Button - Jetzt ein Anchor-Tag, linkt zum Kontaktformular */}
+                {/* Get Started Button - Neuer Stil, responsive Padding/Textgröße */}
                 <a
-                    href="#contact-form-section" // Link zum Kontaktformular
-                    className={`px-6 py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-neutral-800 text-white hover:bg-neutral-700 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                    href="#contact-form-section"
+                    className={`inline-block px-4 py-2 text-sm sm:px-6 sm:py-2.5 lg:px-8 lg:py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-transparent border border-neutral-500 text-white hover:bg-neutral-800 hover:border-neutral-400 transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 >
                     Get Started
                 </a>
@@ -295,30 +315,33 @@ const HomePage = () => {
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-black/0 via-neutral-500/60 to-black/0"></div>
             </div>
 
-            {/* Hero und Bild Sektion */}
-            <div className="relative h-[80vh] mb-20">
+            {/* Hero und Bild Sektion - Höhe auf h-screen geändert */}
+            <div className="relative h-screen mb-20"> {/* von h-[80vh] zu h-screen geändert */}
                 {/* Waves Video Section */}
                 <video
-                    src={heroVideoUrl} // Lokales Video
+                    src={heroVideoUrl}
                     autoPlay
                     loop
                     muted
-                    playsInline // Wichtig für Autoplay auf mobilen Geräten
+                    playsInline
                     className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
                 >
                     Your browser does not support the video tag.
                 </video>
 
                 {/* Hero Text Section */}
-                <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 flex flex-col justify-start items-center h-full pt-32">
-                    {/* Hauptüberschrift - mit Initialanimation (unverändert) */}
-                    <h1 className={`text-7xl font-bold transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>M&M Solutions</h1>
-                    {/* Unterüberschrift - mit Initialanimation und Verzögerung (unverändert) */}
-                    <h2 className={`text-3xl mt-4 animated-gradient-text transition-all duration-700 ease-out delay-200 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your Partner for professional E-Commerce Marketing</h2>
-                    {/* Learn More Button Container - mit Initialanimation und Verzögerung */}
+                <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 flex flex-col justify-start items-center h-full pt-48">
+                    {/* Hauptüberschrift */}
+                    <h1 className={`text-5xl sm:text-7xl font-semibold transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Maurice & Marius Solutions</h1>
+                    {/* Unterüberschrift */}
+                    <h2 className={`text-xl sm:text-2xl mt-4 text-neutral-400 transition-all duration-700 ease-out delay-200 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your Partner for professional E-Commerce Marketing</h2>
+                    {/* Learn More Button Container */}
                     <div className={`mt-8 transition-all duration-700 ease-out delay-400 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        {/* Learn More Button - Jetzt ein Link zu /about */}
-                        <Link to="/about" className="px-6 py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-neutral-800 hover:bg-neutral-700">
+                        {/* Learn More Button - Neuer Stil, responsive Padding/Textgröße */}
+                        <Link
+                            to="/about"
+                            className="inline-block px-6 py-2.5 text-sm sm:px-8 sm:py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-transparent border border-neutral-500 text-white hover:bg-neutral-800 hover:border-neutral-400"
+                        >
                             Learn More
                         </Link>
                     </div>
@@ -333,47 +356,41 @@ const HomePage = () => {
                 }`}
             >
                 <div
-                    className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16"
-                    style={{
-                        backgroundImage: `url('${frameBgUrl}')`, // Lokales Hintergrundbild
-                        backgroundSize: '100% 100%',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    }}
+                    className="relative flex flex-col items-center w-full max-w-xs mx-auto p-6 py-10 rounded-3xl
+                               md:grid md:grid-cols-2 md:gap-16 md:p-16 md:max-w-6xl md:rounded-none md:py-16
+                               bg-center bg-no-repeat" // md:py-16 hinzugefügt für Konsistenz mit Desktop-Padding
+                    style={{ backgroundImage: `url('${frameBgUrl}')`, backgroundSize: '100% 100%' }}
                 >
-                    {/* Linke Spalte: Text */}
-                    <div className="mb-10 md:mb-0">
-                        <div className="flex items-center gap-3 mb-4">
-                            <TrendingUpIcon className="text-cyan-400 w-8 h-8 flex-shrink-0" />
-                            <h2 className="text-4xl font-bold">Drive Real Results</h2>
-                        </div>
-                        <p className="text-neutral-300 text-lg mb-6">
-                            We focus on performance marketing that delivers measurable revenue growth.
-                            Our strategies are optimized for conversion and a clear ROI for your business.
-                        </p>
-                    </div>
-
-                    {/* Rechte Spalte: Dashboard-Inhalt */}
-                    <div>
-                        <div className="relative z-10 flex justify-center mb-1">
-                            <h3 className="text-xl font-semibold">Measurable Revenue Boost</h3>
-                        </div>
-                        <div className="relative">
+                    {/* Bild Container (Mobile: Oben, Desktop: Rechts) */}
+                    <div className="w-full order-1 md:order-2 flex flex-col items-center">
+                        <div className="relative mt-0 md:mt-0">
                             <img
-                                src={performanceDashboardUrlLocal} // Lokales Bild
-                                alt="Performance Dashboard Graphic without border"
-                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${
-                                    isPerformanceVisible ? 'opacity-100' : 'opacity-0'
-                                }`}
+                                src={performanceDashboardUrlLocal}
+                                alt="Leistungs-Dashboard Grafik"
+                                className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto rounded-lg md:w-3/4 lg:w-full" // max-w für mobile angepasst
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Performance+Graphic";
-                                    e.target.alt = "Placeholder for Performance Graphic";
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Leistungs-Grafik";
+                                    e.target.alt = "Platzhalter für Leistungs-Grafik";
                                 }}
                             />
                         </div>
-                        <p className="text-center text-neutral-400 text-sm mt-2 whitespace-nowrap">
-                            Focus on Conversion & ROI
+                        {/* Desktop-spezifische Texte unter dem Bild */}
+                        <div className="hidden md:block text-center mt-2">
+                            <h3 className="text-xl font-semibold">Measurable Revenue Boost</h3>
+                            <p className="text-neutral-400 text-sm mt-1">Focus on Conversion & ROI</p>
+                        </div>
+                    </div>
+
+                    {/* Text Container (Mobile: Unten, Desktop: Links) */}
+                    <div className="w-full order-2 md:order-1 mt-8 md:mt-0 text-center md:text-left">
+                        <div className="flex flex-col items-center md:flex-row md:items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                            <TrendingUpIcon className="text-cyan-400 w-7 h-7 md:w-8 md:h-8 flex-shrink-0" />
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Drive Real Results</h2>
+                        </div>
+                        <p className="text-neutral-300 text-sm sm:text-base md:text-lg">
+                            We focus on performance marketing that delivers measurable revenue growth.
+                            Our strategies are optimized for conversion and a clear ROI for your business.
                         </p>
                     </div>
                 </div>
@@ -387,47 +404,40 @@ const HomePage = () => {
                 }`}
             >
                 <div
-                    className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16"
-                    style={{
-                        backgroundImage: `url('${frameBgUrl2}')`, // Lokales Hintergrundbild
-                        backgroundSize: '100% 100%',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    }}
+                    className="relative flex flex-col items-center w-full max-w-xs mx-auto p-6 py-10 rounded-3xl
+                               md:grid md:grid-cols-2 md:gap-16 md:p-16 md:max-w-6xl md:rounded-none md:py-16
+                               bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url('${frameBgUrl2}')`, backgroundSize: '100% 100%' }}
                 >
-                    {/* Linke Spalte: Text */}
-                    <div className="mb-10 md:mb-0">
-                        <div className="flex items-center gap-3 mb-4">
-                            <ShoppingBag className="text-cyan-400 w-8 h-8 flex-shrink-0" />
-                            <h2 className="text-4xl font-bold">TikTok Shop Experts</h2>
-                        </div>
-                        <p className="text-neutral-300 text-lg mb-6">
-                            We specialize in TikTok Shop, leveraging seamless integration for direct conversions.
-                            Tap into this rapidly growing platform with our targeted strategies.
-                        </p>
-                    </div>
-
-                    {/* Rechte Spalte: Dashboard-Inhalt */}
-                    <div>
-                        <div className="relative z-10 flex justify-center mb-1">
-                            <h3 className="text-xl font-semibold">Seamless TikTok Integration</h3>
-                        </div>
-                        <div className="relative">
+                    {/* Bild Container (Mobile: Oben, Desktop: Links) */}
+                    <div className="w-full order-1 md:order-1 flex flex-col items-center">
+                        <div className="relative mt-0 md:mt-0">
                             <img
-                                src={tiktokShopIntegrationUrlLocal} // Lokales Bild
-                                alt="Seamless TikTok Shop Integration Graphic"
-                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${
-                                    isTikTokVisible ? 'opacity-100' : 'opacity-0'
-                                }`}
+                                src={tiktokShopIntegrationUrlLocal}
+                                alt="Nahtlose TikTok Shop Integration Grafik"
+                                className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto rounded-lg md:w-3/4 lg:w-full" // max-w für mobile angepasst
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=TikTok+Shop+Graphic";
-                                    e.target.alt = "Placeholder for TikTok Shop Graphic";
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=TikTok+Shop+Grafik";
+                                    e.target.alt = "Platzhalter für TikTok Shop Grafik";
                                 }}
                             />
                         </div>
-                        <p className="text-center text-neutral-400 text-sm mt-2 whitespace-nowrap">
-                            Direct Sales on a Booming Platform
+                        {/* Desktop-spezifische Texte unter dem Bild */}
+                        <div className="hidden md:block text-center mt-2">
+                            <h3 className="text-xl font-semibold">Seamless TikTok Integration</h3>
+                            <p className="text-neutral-400 text-sm mt-1">Direct Sales on a Booming Platform</p>
+                        </div>
+                    </div>
+                    {/* Text Container (Mobile: Unten, Desktop: Rechts) */}
+                    <div className="w-full order-2 md:order-2 mt-8 md:mt-0 text-center md:text-left">
+                        <div className="flex flex-col items-center md:flex-row md:items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                            <ShoppingBag className="text-cyan-400 w-7 h-7 md:w-8 md:h-8 flex-shrink-0" />
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">TikTok Shop Experts</h2>
+                        </div>
+                        <p className="text-neutral-300 text-sm sm:text-base md:text-lg">
+                            We specialize in TikTok Shop, leveraging seamless integration for direct conversions.
+                            Tap into this rapidly growing platform with our targeted strategies.
                         </p>
                     </div>
                 </div>
@@ -441,46 +451,40 @@ const HomePage = () => {
                 }`}
             >
                 <div
-                    className="relative md:grid md:grid-cols-2 md:gap-16 items-center max-w-6xl mx-auto p-16"
-                    style={{
-                        backgroundImage: `url('${frameBgUrl}')`, // Lokales Hintergrundbild (Wiederverwendung von frameBgUrl)
-                        backgroundSize: '100% 100%',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                    }}
+                    className="relative flex flex-col items-center w-full max-w-xs mx-auto p-6 py-10 rounded-3xl
+                               md:grid md:grid-cols-2 md:gap-16 md:p-16 md:max-w-6xl md:rounded-none md:py-16
+                               bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url('${frameBgUrl}')`, backgroundSize: '100% 100%' }}
                 >
-                    {/* Linke Spalte: Text */}
-                    <div className="mb-10 md:mb-0">
-                        <div className="flex items-center gap-3 mb-4">
-                            <UsersIcon className="text-cyan-400 w-8 h-8 flex-shrink-0" />
-                            <h2 className="text-4xl font-bold">Empowering Creators</h2>
-                        </div>
-                        <p className="text-neutral-300 text-lg mb-6">
-                            We build strong, transparent partnerships with creators. Benefit from fair commission structures and dedicated support to grow your influence and earnings.
-                        </p>
-                    </div>
-
-                    {/* Rechte Spalte: Dashboard-Inhalt */}
-                    <div>
-                        <div className="relative z-10 flex justify-center mb-1">
-                            <h3 className="text-xl font-semibold">Fair & Supportive Partnership</h3>
-                        </div>
-                        <div className="relative">
+                    {/* Bild Container (Mobile: Oben, Desktop: Rechts) */}
+                    <div className="w-full order-1 md:order-2 flex flex-col items-center">
+                        <div className="relative mt-0 md:mt-0">
                             <img
-                                src={creatorPartnershipUrlLocal} // Lokales Bild
-                                alt="Fair and Supportive Creator Partnership Graphic"
-                                className={`w-full rounded-lg transition-opacity duration-700 ease-out delay-300 ${
-                                    isCreatorVisible ? 'opacity-100' : 'opacity-0'
-                                }`}
+                                src={creatorPartnershipUrlLocal}
+                                alt="Faire und unterstützende Creator-Partnerschaft Grafik"
+                                className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto rounded-lg md:w-3/4 lg:w-full" // max-w für mobile angepasst
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Creator+Graphic";
-                                    e.target.alt = "Placeholder for Creator Graphic";
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Creator-Grafik";
+                                    e.target.alt = "Platzhalter für Creator-Grafik";
                                 }}
                             />
                         </div>
-                        <p className="text-center text-neutral-400 text-sm mt-2 whitespace-nowrap">
-                            Grow Together with Transparent Collaboration
+                        {/* Desktop-spezifische Texte unter dem Bild */}
+                        <div className="hidden md:block text-center mt-2">
+                            <h3 className="text-xl font-semibold">Fair & Supportive Partnership</h3>
+                            <p className="text-neutral-400 text-sm mt-1">Grow Together with Transparent Collaboration</p>
+                        </div>
+                    </div>
+
+                    {/* Text Container (Mobile: Unten, Desktop: Links) */}
+                    <div className="w-full order-2 md:order-1 mt-8 md:mt-0 text-center md:text-left">
+                        <div className="flex flex-col items-center md:flex-row md:items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                            <UsersIcon className="text-cyan-400 w-7 h-7 md:w-8 md:h-8 flex-shrink-0" />
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Empowering Creators</h2>
+                        </div>
+                        <p className="text-neutral-300 text-sm sm:text-base md:text-lg">
+                            We build strong, transparent partnerships with creators. Benefit from fair commission structures and dedicated support to grow your influence and earnings.
                         </p>
                     </div>
                 </div>
@@ -488,7 +492,7 @@ const HomePage = () => {
 
             {/* Neuer Abschnitt: Kontaktformular */}
             <div
-                id="contact-form-section" // ID für den Ankerlink
+                id="contact-form-section"
                 ref={contactSectionRef}
                 className={`py-20 px-4 sm:px-6 lg:px-8 transition-opacity duration-1000 ease-out ${
                     isContactVisible ? 'opacity-100' : 'opacity-0'
@@ -497,7 +501,7 @@ const HomePage = () => {
                 <div className="max-w-2xl mx-auto relative min-h-[500px]">
                     <h2 className="text-3xl font-bold text-center mb-8">Contact Us</h2>
 
-                    {/* Thank You Message Container (unverändert) */}
+                    {/* Thank You Message Container */}
                     <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out pointer-events-none ${
                         submissionStatus === 'success' ? 'opacity-100 z-20' : 'opacity-0 hidden'
                     }`}>
@@ -508,7 +512,7 @@ const HomePage = () => {
                         )}
                     </div>
 
-                    {/* Formular Container (unverändert) */}
+                    {/* Formular Container */}
                     <div className={`transition-opacity duration-500 ease-in-out ${
                         submissionStatus === 'success' ? 'opacity-0 invisible' : 'opacity-100 visible'
                     }`}>
@@ -632,17 +636,17 @@ const HomePage = () => {
                                     />
                                 </div>
 
-                                {/* Submit Button (unverändert) */}
+                                {/* Submit Button - Beibehaltung des soliden Hintergrunds für bessere Lesbarkeit, aber responsive Padding/Textgröße */}
                                 <div>
                                     <Button
                                         type="submit"
-                                        className={`w-full bg-white text-black hover:bg-neutral-200 font-semibold ${submissionStatus === 'submitting' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`w-full bg-white text-black hover:bg-neutral-200 border-neutral-300 hover:border-neutral-400 font-semibold ${submissionStatus === 'submitting' ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         disabled={submissionStatus === 'submitting'}
                                     >
                                         {submissionStatus === 'submitting' ? 'Senden...' : 'Nachricht Senden'}
                                     </Button>
                                 </div>
-                                {/* Fehlermeldung im UI anzeigen (unverändert) */}
+                                {/* Fehlermeldung im UI anzeigen */}
                                 {submissionStatus === 'error' && <p className="text-red-500 text-center mt-4">Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut.</p>}
                             </form>
                         )}
@@ -660,10 +664,10 @@ const HomePage = () => {
             >
                 <h2 className="text-3xl font-bold">Drive Sales on TikTok</h2>
                 <p className="mt-2 text-neutral-400">Partner with us to promote your products</p>
-                {/* Get Started Button im CTA - Jetzt ein Anchor-Tag, linkt zum Kontaktformular */}
+                {/* Get Started Button im CTA - Solider Hintergrund, responsive Padding/Textgröße */}
                 <a
-                    href="#contact-form-section" // Link zum Kontaktformular
-                    className="mt-6 bg-white text-black hover:bg-neutral-200 font-semibold px-6 py-3 rounded-lg inline-block transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                    href="#contact-form-section"
+                    className="mt-6 inline-block bg-white text-black hover:bg-neutral-200 font-semibold px-6 py-2.5 text-sm sm:px-8 sm:py-3 rounded-full transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 border border-neutral-300 hover:border-neutral-400"
                 >
                     Get Started
                 </a>
@@ -676,8 +680,7 @@ const HomePage = () => {
                     isFooterVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             >
-                <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} M&M Solutions. All rights reserved.</p>
-                {/* Fügen Sie hier Social-Media-Links oder andere Footer-Inhalte hinzu */}
+                <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} MM Solutions. All rights reserved.</p>
             </footer>
 
         </div>
@@ -688,12 +691,8 @@ const HomePage = () => {
 export default function App() {
     return (
         <Routes>
-            {/* Route für die Startseite */}
             <Route path="/" element={<HomePage />} />
-            {/* Route für die Über uns Seite - verwendet die importierte Komponente */}
             <Route path="/about" element={<AboutPage />} />
-            {/* Optional: Eine Fallback-Route für 404-Fehler */}
-            {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
         </Routes>
     );
 }
