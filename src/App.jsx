@@ -13,10 +13,10 @@ import tiktokShopIntegrationUrlLocal from './images/Seemless.png'; // Beachte de
 import creatorPartnershipUrlLocal from './images/fair&supportive.png'; // Beachte den Dateinamen "fair&supportive.png"
 
 
-// Button Komponente - Überarbeitet mit neuem Stil und responsiven Padding/Textgrößen
+// Button Komponente - Überarbeitet: text-white aus Basis-Styles entfernt für bessere Überschreibbarkeit
 const Button = ({ className, children, ...props }) => (
     <button
-        className={`px-6 py-2.5 text-sm sm:px-8 sm:py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-transparent border border-neutral-500 text-white hover:bg-neutral-800 hover:border-neutral-400 ${className}`}
+        className={`px-6 py-2.5 text-sm sm:px-8 sm:py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-transparent border border-neutral-500 hover:bg-neutral-800 hover:border-neutral-400 ${className}`} // text-white hier entfernt
         {...props}
     >
         {children}
@@ -175,12 +175,12 @@ const HomePage = () => {
                 }, 3000);
             } else {
                 const errorData = await response.json();
-                const errorMessage = errorData.errors ? errorData.errors.map(err => err.message).join(', ') : 'Unbekannter Fehler.';
+                const errorMessage = errorData.errors ? errorData.errors.map(err => err.message).join(', ') : 'Unknown error.';
                 throw new Error(errorMessage);
             }
         } catch (error) {
             setSubmissionStatus('error');
-            console.error("Fehler beim Senden des Formulars:", error);
+            console.error("Error submitting form:", error);
             setTimeout(() => {
                 setSubmissionStatus(null);
             }, 5000);
@@ -370,8 +370,8 @@ const HomePage = () => {
                                 className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto rounded-lg md:w-3/4 lg:w-full" // max-w für mobile angepasst
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Leistungs-Grafik";
-                                    e.target.alt = "Platzhalter für Leistungs-Grafik";
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Performance+Graphic";
+                                    e.target.alt = "Placeholder for Performance Graphic";
                                 }}
                             />
                         </div>
@@ -418,8 +418,8 @@ const HomePage = () => {
                                 className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto rounded-lg md:w-3/4 lg:w-full" // max-w für mobile angepasst
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=TikTok+Shop+Grafik";
-                                    e.target.alt = "Platzhalter für TikTok Shop Grafik";
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=TikTok+Shop+Graphic";
+                                    e.target.alt = "Placeholder for TikTok Shop Graphic";
                                 }}
                             />
                         </div>
@@ -465,8 +465,8 @@ const HomePage = () => {
                                 className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-none mx-auto rounded-lg md:w-3/4 lg:w-full" // max-w für mobile angepasst
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Creator-Grafik";
-                                    e.target.alt = "Platzhalter für Creator-Grafik";
+                                    e.target.src = "https://placehold.co/600x400/171717/525252?text=Creator+Graphic";
+                                    e.target.alt = "Placeholder for Creator Graphic";
                                 }}
                             />
                         </div>
@@ -532,7 +532,7 @@ const HomePage = () => {
                                         value={formData.name}
                                         onChange={handleInputChange}
                                         className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        placeholder="Ihr Name"
+                                        placeholder="Your Name"
                                         disabled={submissionStatus === 'submitting'}
                                     />
                                 </div>
@@ -548,14 +548,14 @@ const HomePage = () => {
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        placeholder="Ihre Email-Adresse"
+                                        placeholder="Your Email Address"
                                         disabled={submissionStatus === 'submitting'}
                                     />
                                 </div>
 
                                 {/* User Type (Radio Buttons) */}
                                 <fieldset disabled={submissionStatus === 'submitting'} className="disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <legend className="block text-sm font-medium text-neutral-300 mb-2">Ich bin...</legend>
+                                    <legend className="block text-sm font-medium text-neutral-300 mb-2">I am...</legend>
                                     <div className="flex items-center space-x-4">
                                         <div className="flex items-center">
                                             <input
@@ -596,7 +596,7 @@ const HomePage = () => {
                                             value={formData.tiktokHandle}
                                             onChange={handleInputChange}
                                             className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                            placeholder="Ihr TikTok @ Name"
+                                            placeholder="Your TikTok @ Handle"
                                             disabled={submissionStatus === 'submitting'}
                                         />
                                     </div>
@@ -605,7 +605,7 @@ const HomePage = () => {
                                 {/* Conditional Field: TikTok Handle or Website (for Seller) */}
                                 {formData.userType === 'seller' && (
                                     <div>
-                                        <label htmlFor="websiteOrTiktok" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @ oder Website</label>
+                                        <label htmlFor="websiteOrTiktok" className="block text-sm font-medium text-neutral-300 mb-1">TikTok @ or Website</label>
                                         <input
                                             type="text"
                                             name="websiteOrTiktok"
@@ -614,7 +614,7 @@ const HomePage = () => {
                                             value={formData.websiteOrTiktok}
                                             onChange={handleInputChange}
                                             className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                            placeholder="Ihr TikTok @ oder Ihre Website URL"
+                                            placeholder="Your TikTok @ or Website URL"
                                             disabled={submissionStatus === 'submitting'}
                                         />
                                     </div>
@@ -622,7 +622,7 @@ const HomePage = () => {
 
                                 {/* Message */}
                                 <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">Nachricht</label>
+                                    <label htmlFor="message" className="block text-sm font-medium text-neutral-300 mb-1">Message</label>
                                     <textarea
                                         name="message"
                                         id="message"
@@ -631,23 +631,23 @@ const HomePage = () => {
                                         value={formData.message}
                                         onChange={handleInputChange}
                                         className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        placeholder="Ihre Nachricht an uns..."
+                                        placeholder="Your message to us..."
                                         disabled={submissionStatus === 'submitting'}
                                     />
                                 </div>
 
-                                {/* Submit Button - Beibehaltung des soliden Hintergrunds für bessere Lesbarkeit, aber responsive Padding/Textgröße */}
+                                {/* Submit Button - Klassen für Textfarbe und Hintergrund sind hier definiert */}
                                 <div>
                                     <Button
                                         type="submit"
-                                        className={`w-full bg-white text-black hover:bg-neutral-200 border-neutral-300 hover:border-neutral-400 font-semibold ${submissionStatus === 'submitting' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`w-full bg-white text-black hover:bg-neutral-600 hover:text-white border-neutral-300 hover:border-neutral-400 font-semibold ${submissionStatus === 'submitting' ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         disabled={submissionStatus === 'submitting'}
                                     >
-                                        {submissionStatus === 'submitting' ? 'Senden...' : 'Nachricht Senden'}
+                                        {submissionStatus === 'submitting' ? 'Sending...' : 'Send Message'}
                                     </Button>
                                 </div>
                                 {/* Fehlermeldung im UI anzeigen */}
-                                {submissionStatus === 'error' && <p className="text-red-500 text-center mt-4">Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut.</p>}
+                                {submissionStatus === 'error' && <p className="text-red-500 text-center mt-4">Error sending message. Please try again.</p>}
                             </form>
                         )}
                     </div>
