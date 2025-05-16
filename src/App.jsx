@@ -354,7 +354,7 @@ const HomePage = () => {
     );
 };
 
-// Hauptkomponente App, die die Routen verwaltet (unverändert)
+// Hauptkomponente App, die die Routen verwaltet (unverändert) hier ist eine änderung
 export default function App() {
     return (
         <Routes>
