@@ -266,7 +266,7 @@ const HomePage = () => {
                         Your browser does not support the video tag.
                     </video>
                     <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 flex flex-col justify-start items-center h-full pt-48">
-                        <h1 className={`text-5xl sm:text-7xl font-semibold transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Maurice & Marius Solutions.</h1>
+                        <h1 className={`text-5xl sm:text-7xl font-semibold transition-all duration-700 ease-out ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Maurice & Marius Solutions..</h1>
                         <h2 className={`text-xl sm:text-2xl mt-4 text-neutral-400 transition-all duration-700 ease-out delay-200 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>Your Partner for professional E-Commerce Marketing</h2>
                         <div className={`mt-8 transition-all duration-700 ease-out delay-400 ${isHeroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                             <Link to="/about" className="inline-block px-6 py-2.5 text-sm sm:px-8 sm:py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 bg-transparent border border-neutral-500 text-white hover:bg-neutral-800 hover:border-neutral-400">Learn More</Link>
